@@ -89,7 +89,7 @@ package
                 var randomPosition:Point = randomPointInRectangle(_worldBounds);
                 square.x = randomPosition.x;
                 square.y = randomPosition.y;
-                _quadtreeSprite.addChild(square);
+                this.addChild(square);
             }
 
             Starling.current.showStats = true;
