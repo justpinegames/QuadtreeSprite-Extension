@@ -9,6 +9,11 @@ The example creates 100,000 Quad objects on 20,000 x 20,000 world, which results
 * Sprite - 0.9 FPS (Not really designed for this :) )
 * QuadtreeSprite - 60 FPS
 
+## Demo
+
+You can check out the demo and introduction at:
+[http://justpinegames.com/blog/2013/03/quadtreesprite/](http://justpinegames.com/blog/2013/03/quadtreesprite/)
+
 ## Usage
 
 Creation:
