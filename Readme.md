@@ -6,8 +6,8 @@ QuadtreeSprite is a Starling extensions which is useful when you need a containe
 There are a few things different in the API so check the usage section below.
 
 The example creates 100,000 Quad objects on 20,000 x 20,000 world, which results in the following performance on my machine:
-Sprite - 0.03 FPS (Not really designed for this :) )
-QuadtreeSprite - 60 FPS
+* Sprite - 0.03 FPS (Not really designed for this :) )
+* QuadtreeSprite - 60 FPS
 
 ## Usage
 
