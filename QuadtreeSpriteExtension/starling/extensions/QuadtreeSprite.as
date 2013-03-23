@@ -1,5 +1,7 @@
 package starling.extensions
 {
+    import flash.utils.Dictionary;
+
     import starling.extensions.quadtree.Quadtree;
 
     import flash.geom.Rectangle;
@@ -15,13 +17,17 @@ package starling.extensions
         private var _viewport:Rectangle;
         private var _children:Vector.<DisplayObject>;
 
+        private var _childrenPositions:Dictionary;
+
         private var _dirty:Boolean;
 
-        public function QuadtreeSprite(worldSpace:Rectangle)
+        public function QuadtreeSprite(worldSpace:Rectangle, maintainOrder:Boolean = false)
         {
             _quadtree = new Quadtree(worldSpace.left, worldSpace.top, worldSpace.right, worldSpace.bottom);
             _viewport = worldSpace.clone();
             _children = new Vector.<DisplayObject>();
+
+            if (maintainOrder) _childrenPositions = new Dictionary();
 
             _dirty = true;
         }
@@ -43,11 +49,13 @@ package starling.extensions
 
         override public function addChildAt(child:DisplayObject, index:int):DisplayObject
         {
-            /// No need to set the dirty, we can just check if the object intersects.
+            // No need to set the dirty, we can just check if the object intersects.
             if (_viewport.intersects(child.bounds))
             {
                 super.addChildAt(child, index);
             }
+
+            if (_childrenPositions) _childrenPositions[child] = _children.length;
 
             _children.push(child);
 
@@ -75,11 +83,10 @@ package starling.extensions
 
             _quadtree.remove(child);
 
-            /// to remove the need for refresh, remove the child from the container if it's there
-            if (this.contains(child))
-            {
-                super.removeChild(child, dispose);
-            }
+            if (_childrenPositions) delete _childrenPositions[child];
+
+            // to remove the need for refresh, remove the child from the container if it's there
+            if (this.contains(child)) super.removeChild(child, dispose);
 
             return child;
         }
@@ -93,6 +100,15 @@ package starling.extensions
             this.removeChildren();
 
             var visibleObjects:Vector.<Object> = _quadtree.objectsInRectangle(_viewport);
+
+            // To maintain the order sort children by their insertion index
+            if (_childrenPositions)
+            {
+                visibleObjects.sort(function(first:DisplayObject, second:DisplayObject):Number
+                {
+                    return _childrenPositions[first] - _childrenPositions[second];
+                });
+            }
 
             for each (var visibleObject:DisplayObject in visibleObjects)
             {
