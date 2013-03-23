@@ -33,7 +33,8 @@ package
         private var _velocityX:Number;
         private var _velocityY:Number;
 
-        private var _button:Button;
+        private var _buttonExample100K:Button;
+        private var _buttonExampleOrdered:Button;
 
         private var _worldBounds:Rectangle;
 
@@ -63,19 +64,38 @@ package
 
             var buttonBitmap:BitmapData = new BitmapData(300, 30, false, 0x7eb249);
 
-            _button = new Button(Texture.fromBitmapData(buttonBitmap), "Create 100,000 objects (may take a few seconds)");
-            _button.addEventListener(Event.TRIGGERED, setupScene);
-            _button.pivotX = _button.width / 2;
-            _button.pivotY = _button.height / 2;
-            _button.x = this.stage.stageWidth / 2;
-            _button.y = this.stage.stageHeight / 2;
-            this.addChild(_button);
+            _buttonExample100K = new Button(Texture.fromBitmapData(buttonBitmap), "Create 100,000 objects (may take a few seconds)");
+            _buttonExample100K.addEventListener(Event.TRIGGERED, setupScene100K);
+            _buttonExample100K.pivotX = _buttonExample100K.width / 2;
+            _buttonExample100K.pivotY = _buttonExample100K.height / 2;
+            _buttonExample100K.x = this.stage.stageWidth / 2;
+            _buttonExample100K.y = this.stage.stageHeight / 2 - 30;
+            this.addChild(_buttonExample100K);
+
+            _buttonExampleOrdered = new Button(Texture.fromBitmapData(buttonBitmap), "Create 50 objects and maintain order");
+            _buttonExampleOrdered.addEventListener(Event.TRIGGERED, setupSceneOrdered);
+            _buttonExampleOrdered.pivotX = _buttonExampleOrdered.width / 2;
+            _buttonExampleOrdered.pivotY = _buttonExampleOrdered.height / 2;
+            _buttonExampleOrdered.x = this.stage.stageWidth / 2;
+            _buttonExampleOrdered.y = this.stage.stageHeight / 2 + 30;
+            this.addChild(_buttonExampleOrdered);
 
         }
 
-        public function setupScene():void
+        private function setupCommon():void
         {
-            _button.removeFromParent(true);
+            _buttonExample100K.removeFromParent(true);
+            _buttonExampleOrdered.removeFromParent(true);
+
+            Starling.current.showStats = true;
+
+            this.addEventListener(TouchEvent.TOUCH, touchEvent);
+            this.addEventListener(EnterFrameEvent.ENTER_FRAME, enterFrame);
+        }
+
+        public function setupScene100K():void
+        {
+            setupCommon();
 
             _worldBounds = new Rectangle(-WORLD_BOUND, -WORLD_BOUND, WORLD_BOUND * 2, WORLD_BOUND * 2);
             _quadtreeSprite = new QuadtreeSprite(_worldBounds);
@@ -92,10 +112,25 @@ package
                 _quadtreeSprite.addChild(square);
             }
 
-            Starling.current.showStats = true;
+        }
 
-            this.addEventListener(TouchEvent.TOUCH, touchEvent);
-            this.addEventListener(EnterFrameEvent.ENTER_FRAME, enterFrame);
+        public function setupSceneOrdered():void
+        {
+            setupCommon();
+
+            _worldBounds = new Rectangle(-WORLD_BOUND, -WORLD_BOUND, WORLD_BOUND * 2, WORLD_BOUND * 2);
+            _quadtreeSprite = new QuadtreeSprite(_worldBounds, true);
+            _quadtreeSprite.visibleViewport = new Rectangle(0, 0, this.stage.stageWidth, this.stage.stageHeight);
+
+            this.addChild(_quadtreeSprite);
+
+            for (var i:int = 0; i < 50; ++i)
+            {
+                var square:Quad = new Quad(SQUARE_SIZE, SQUARE_SIZE, randomColor());
+                square.x = 20 * i;
+                square.y = 20 * i;
+                _quadtreeSprite.addChild(square);
+            }
         }
 
         private function touchEvent(event:TouchEvent):void
