@@ -55,6 +55,6 @@ You can iterate through the currently visible objects, or all of which the conta
         var object:DisplayObject = container.dynamicGetChildAt(i);
     }
 
+**Note!** Order of insertion is not maintained by default, as it has a performance cost. You can enable it when creating an object:
 
-
-
+    var container:QuadtreeSprite = new QuadtreeSprite(worldBounds, true);
