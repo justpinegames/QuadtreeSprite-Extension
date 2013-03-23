@@ -55,9 +55,18 @@ package starling.extensions
                 super.addChildAt(child, index);
             }
 
-            if (_childrenPositions) _childrenPositions[child] = _children.length;
+            if (_childrenPositions)
+            {
+                _children.splice(index, 0, child);
 
-            _children.push(child);
+                for (var i:int = index; i < _children.length; i++)
+                    _childrenPositions[_children[i]] = i;
+            }
+            else
+            {
+                // Don't care about the order
+                _children.push(child);
+            }
 
             _quadtree.insert(child, child.bounds);
 

@@ -124,12 +124,20 @@ package
 
             this.addChild(_quadtreeSprite);
 
-            for (var i:int = 0; i < 50; ++i)
+            for (var i:int = 0; i < 25; ++i)
             {
                 var square:Quad = new Quad(SQUARE_SIZE, SQUARE_SIZE, randomColor());
                 square.x = 20 * i;
                 square.y = 20 * i;
                 _quadtreeSprite.addChild(square);
+            }
+
+            for (var j:int = 25; j < 50; ++j)
+            {
+                var square:Quad = new Quad(SQUARE_SIZE, SQUARE_SIZE, randomColor());
+                square.x = 20 * j;
+                square.y = 20 * j;
+                _quadtreeSprite.addChildAt(square, 0);
             }
         }
 
