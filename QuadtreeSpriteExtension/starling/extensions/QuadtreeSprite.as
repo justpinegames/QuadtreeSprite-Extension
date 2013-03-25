@@ -47,13 +47,16 @@ package starling.extensions
             _dirty = true;
         }
 
+        override public function addChild(child:DisplayObject):DisplayObject
+        {
+            addChildAt(child, this.dynamicNumChildren);
+            return child;
+        }
+
         override public function addChildAt(child:DisplayObject, index:int):DisplayObject
         {
             // No need to set the dirty, we can just check if the object intersects.
-            if (_viewport.intersects(child.bounds))
-            {
-                super.addChildAt(child, index);
-            }
+            if (_viewport.intersects(child.bounds)) super.addChildAt(child, this.numChildren);
 
             if (_childrenPositions)
             {
@@ -61,6 +64,8 @@ package starling.extensions
 
                 for (var i:int = index; i < _children.length; i++)
                     _childrenPositions[_children[i]] = i;
+
+                this.invalidate();
             }
             else
             {
@@ -70,6 +75,7 @@ package starling.extensions
 
             _quadtree.insert(child, child.bounds);
 
+            // TODO Can this be removed?
             _dirty = true;
 
             return child;
