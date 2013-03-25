@@ -126,7 +126,8 @@ package
 
             for (var i:int = 0; i < 25; ++i)
             {
-                var square:Quad = new Quad(SQUARE_SIZE, SQUARE_SIZE, randomColor());
+                var colorValue:int = 255 - (i - 25) / 25.0 * 255;
+                var square:Quad = new Quad(SQUARE_SIZE, SQUARE_SIZE, Color.rgb(i % 2 == 1 ? colorValue : 0, i % 2 == 0 ? colorValue : 0, 0));
                 square.x = 20 * i;
                 square.y = 20 * i;
                 _quadtreeSprite.addChild(square);
@@ -134,7 +135,8 @@ package
 
             for (var j:int = 25; j < 50; ++j)
             {
-                var square:Quad = new Quad(SQUARE_SIZE, SQUARE_SIZE, randomColor());
+                var colorValue:int = 255 - (j - 25) / 25.0 * 255;
+                var square:Quad = new Quad(SQUARE_SIZE, SQUARE_SIZE, Color.rgb(0, j % 2 == 1 ? colorValue : 0, j % 2 == 0 ? colorValue : 0));
                 square.x = 20 * j;
                 square.y = 20 * j;
                 _quadtreeSprite.addChildAt(square, 0);
