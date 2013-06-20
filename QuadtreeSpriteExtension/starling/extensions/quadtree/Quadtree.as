@@ -45,10 +45,7 @@ package starling.extensions.quadtree
             var node:QuadtreeNode = _objectNodeMapping[object];
 
             /// Object not found
-            if (!node)
-            {
-                return false;
-            }
+            if (!node) return false;
 
             node.removeObject(object);
 
@@ -59,7 +56,10 @@ package starling.extensions.quadtree
 
         public function update(object:Object, bounds:Rectangle):void
         {
-            this.remove(object);
+            const wasRemoved:Boolean = this.remove(object);
+            if (!wasRemoved) {
+                throw new Error("Can't update object which has not been added to Quadtree.");
+            }
             this.insert(object, bounds);
         }
 
